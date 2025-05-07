@@ -1,0 +1,73 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# GENERAL PROJECT RULES
+- Always write all code and documentation in English.
+- Assume the project is meant to serve artists (especially independent ones), focusing on simplifying content planning and creation for Instagram.
+- Keep the tone of all user-facing copy helpful, clear, empowering, and friendly — never corporate or salesy.
+- Prioritize clarity, maintainability, and extensibility over early optimization.
+
+# ENVIRONMENT
+- All command-line examples and setup instructions must be written for Windows (use PowerShell or CMD syntax).
+- Avoid Unix-specific commands like `rm`, `touch`, or `.sh` scripts; always use Windows-compatible equivalents.
+
+# BACKEND (FASTAPI + LANGCHAIN + CHROMA)
+- Use `FastAPI` to expose endpoints for content generation and strategy planning.
+- Implement modular LangChain pipelines (RAG, memory retrieval, LLM calls) in clearly separated files (e.g. `chains/`, `tools/`, `agents/`).
+- Use `Chroma` as the default vector store for document embeddings; persist to `./chroma_db` by default.
+- Always document what each agent or chain is meant to do, even if it's internal.
+- Use environment variables for all API keys and secrets; never hardcode.
+
+# FRONTEND (REACT)
+- Use Tailwind CSS and shadcn/ui components.
+- Match the visual style to artists' aesthetic needs: soft shadows, rounded corners, clean typography.
+- Create reusable components for any AI output formatting (e.g. ContentCard, PostIdeaBox).
+- Prioritize mobile responsiveness.
+- Use `react-query` or similar library for backend communication.
+
+# AGENT LOGIC
+- The main agent should help plan and generate content ideas, captions, and scripts based on:
+  - Artist goals and audience
+  - Past post performance
+  - Reference content and tone
+- Use memory + RAG to personalize suggestions over time.
+- Structure each response as a set of **actionable outputs** (e.g., idea + caption + CTA).
+- Include content categories (e.g., personal story, educational tip, audience question) as part of the planning logic.
+
+# DATA AND PERFORMANCE ANALYSIS
+- If performance data is available, prioritize it to drive suggestions.
+- Provide actionable insights (e.g., “carousel posts with personal stories have 30% more saves”).
+
+# FILE STRUCTURE
+- Follow a clean and logical folder structure:
+  - `/api/` – FastAPI app and endpoints
+  - `/chains/`, `/agents/`, `/tools/` – LangChain logic
+  - `/frontend/` – React UI
+  - `/docs/` – Shared prompt guides, templates, RAG sources
+  - `/data/` – Initial vector store or seed datasets
+  - `.env.example` – For documenting required environment variables
+
+# NAMING
+- Name files and functions clearly by purpose (e.g., `generate_content_ideas.py`, `post_analysis_agent.ts`)
+- Use kebab-case for frontend filenames, snake_case for Python files.
+
+# PROMPTING AND TEMPLATE RULES
+- Prompts must:
+  - Be clear about desired output format
+  - Reference available memory or uploaded data when relevant
+  - Use few-shot examples only when necessary for tone calibration
+
+# TESTING
+- Every core module (chains, agents, tools, APIs) must have at least one test covering its main behavior.
+- Use `pytest` for backend (FastAPI + LangChain logic).
+- Write test cases for:
+  - Agent outputs: validate format and structure of responses
+  - ChromaDB retrieval: test expected vs. actual documents returned
+  - Endpoint responses: status codes and output schema
+- Use mock LLM outputs for faster and deterministic tests.
+- Include at least 1 “golden test” for core agent logic (fixed input → expected content output).
+- Use `React Testing Library` or similar for frontend component behavior (when applicable).
+- Testing is mandatory before deploying new logic to production environments or committing major changes.
+
